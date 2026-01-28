@@ -1,12 +1,13 @@
 const express=require("express");
 const connectDB=require("./config/database")
 const app=express();
+const path=require("path");
+const photoRouter=require("./routes/userPhoto")
+app.use("/uploads",express.static(path.join(__dirname,"../uploads")));
 
 app.use(express.json());
 
-app.get("/", (req, res) => {
-    res.status(200).send("Job Tracker Backend is running 🚀");
-});
+app.use("/",photoRouter)
 connectDB()
 .then(()=>{
     console.log("Database connection established..");
