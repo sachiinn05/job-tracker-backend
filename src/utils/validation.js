@@ -15,4 +15,4 @@ const validateSignUpData=(req)=>{
         throw new Error ("Please enter string passord");
     }
 }
-module.exports=validateSignUpData;
+module.exports={validateSignUpData};

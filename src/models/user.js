@@ -1,21 +1,22 @@
 const mongoose=require("mongoose");
 const validator=require("validator");
 const jwt=require("jsonwebtoken")
+const bcrypt=require("bcrypt")
 const userSchema=new mongoose.Schema({
     firstName:{
         type:String,
-        require:true,
+        required:true,
         minLength:4,
         maxLength:50,
     },
     lastName:{
         type:String,
-        require:true,
+        required:true,
     },
     emailId:{
         type:String,
         lowercase:true,
-        require:true,
+        required:true,
         unique:true,
         trim:true,
         validate(value)
@@ -28,7 +29,7 @@ const userSchema=new mongoose.Schema({
     },    
      password:{
        type:String,
-       require:true,
+       required:true,
     },
     age:{
        type:Number,
@@ -56,7 +57,7 @@ const userSchema=new mongoose.Schema({
     },
 },
 {
-    timeseries:true,
+    timestamps:true,
 });
 
 userSchema.methods.getJWT=async function ()
@@ -66,6 +67,13 @@ userSchema.methods.getJWT=async function ()
      expiresIn: "7d",
  });
  return token;
+}
+userSchema.methods.validatePassword=async function (passwordInputByUser)
+{
+    const user=this;
+    const passwordHash=user.password;
+    const isPasswordValid=await bcrypt.compare(passwordInputByUser,passwordHash);
+    return isPasswordValid;
 }
 
 module.exports=mongoose.model("User",userSchema);
