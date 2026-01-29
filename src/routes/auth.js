@@ -1,9 +1,11 @@
 const express=require("express");
 const authRouther=express.Router();
 const User=require("../models/user");
-const bcrypt=require("bcrypt")
+const bcrypt=require("bcrypt");
+const validateSignUpData = require("../utils/validation");
 authRouther.post("/signup",async(req,res)=>{
     try{
+        validateSignUpData(req);
          const {firstName,lastName,emailId,password}=req.body;
          const passwordHash=await bcrypt.hash(password,10);
          console.log(passwordHash);
@@ -15,6 +17,12 @@ authRouther.post("/signup",async(req,res)=>{
             password:passwordHash,
          })
          const  savedUser=await user.save();
+         const token =await savedUser.getJWT();
+
+         res.cookie("token",token,{
+            expires:new Date (Date.now()+8*3600000)
+         })
+
          res.send({message:"User data save",data:savedUser});
          
     }
