@@ -2,12 +2,14 @@ const express=require("express");
 const connectDB=require("./config/database")
 const app=express();
 const path=require("path");
-const photoRouter=require("./routes/userPhoto")
+const photoRouter=require("./routes/userPhoto");
+const authRouther = require("./routes/auth");
 app.use("/uploads",express.static(path.join(__dirname,"../uploads")));
 
 app.use(express.json());
 
 app.use("/",photoRouter)
+app.use("/",authRouther);
 connectDB()
 .then(()=>{
     console.log("Database connection established..");
