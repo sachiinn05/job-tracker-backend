@@ -35,16 +35,16 @@ const userSchema=new mongoose.Schema({
        type:Number,
         min:18,
     },
-    gender:{
-      type:String,
-       validate(value)
-       {
-         if(!["male","female","others"].includes(value))
-            {
-                throw new Error("Gender data is not valid");
-            }
-        },
-    },
+    gender: {
+        type: String,
+        lowercase: true,
+         validate(value) {
+         if (!["male", "female", "others"].includes(value)) {
+         throw new Error("Gender data is not valid");
+       }
+      }
+     },
+
      about:{
         type:String,
         default:"This is default about of user"

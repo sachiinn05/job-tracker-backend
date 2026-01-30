@@ -15,4 +15,19 @@ const validateSignUpData=(req)=>{
         throw new Error ("Please enter string passord");
     }
 }
-module.exports={validateSignUpData};
+
+const validateEditProfileData=(req)=>{
+     const allowedEditFields = [
+    "firstName",
+    "lastName",
+    "emailId",
+    "age",
+    "gender",
+    "photo",
+    "about",
+    "skills",
+  ];
+  const isEditiAllowed=Object.keys(req.body).every((fields)=>allowedEditFields.includes(fields));
+  return isEditiAllowed;
+}
+module.exports={validateSignUpData,validateEditProfileData};
