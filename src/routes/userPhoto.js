@@ -1,19 +1,18 @@
-const express=require("express");
-const upload=require("../middleware/upload")
-const User=require("../models/user");
-const photoRouter=express.Router();
+const express = require("express");
+const upload = require("../middleware/upload");
+const {userAuth} = require("../middleware/auth");
+const User = require("../models/user");
 
-photoRouter.post(
-  "/upload-photo/:id",
-  upload.single("photo"),
-  async (req, res) => {
+const photoRouter = express.Router();
+
+photoRouter.post("/upload-photo",userAuth,upload.single("photo"),async (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ error: "No file uploaded" });
       }
 
       const user = await User.findByIdAndUpdate(
-        req.params.id,
+        req.user.id, // 👈 ID comes from JWT
         { photo: `/uploads/${req.file.filename}` },
         { new: true }
       );
@@ -28,4 +27,4 @@ photoRouter.post(
   }
 );
 
-module.exports=photoRouter;
+module.exports = photoRouter;
