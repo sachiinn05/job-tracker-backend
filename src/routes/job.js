@@ -84,4 +84,32 @@ jobRouter.patch("/job/:id",userAuth,async(req,res)=>{
     }
 })
 
+jobRouter.patch("/job/:id/status",userAuth,async(req,res)=>{
+    try{
+        const {status,note}=req.body;
+        const validStatuses = ["Applied", "OA", "Interview", "Offer", "Rejected"];
+        if(! validStatuses.includes(status))
+        {
+            return res.status(400).json({error:"Invalid status value"});
+        }
+        const job_id=req.params.id;
+        const job=await JobApplication.findById(job_id);
+        if (!job || job.userId.toString() !== req.user.id) {
+          return res.status(404).json({ error: "Job not found" });
+        }
+        job.currentStatus=status;
+        job.statusHistory.push({
+            status,
+            date:new Date(),
+            note:note|| `Status updated to ${status}`
+        });
+        await job.save();
+        res.status(200).json(job);
+
+    }catch(err)
+    {
+        res.status(400).send("Error :"+ err.message);
+    }
+})
+
 module.exports=jobRouter;
