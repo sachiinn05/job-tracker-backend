@@ -12,7 +12,7 @@ photoRouter.post("/upload-photo",userAuth,upload.single("photo"),async (req, res
       }
 
       const user = await User.findByIdAndUpdate(
-        req.user.id, // 👈 ID comes from JWT
+        req.user.id, 
         { photo: `/uploads/${req.file.filename}` },
         { new: true }
       );
