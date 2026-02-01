@@ -26,6 +26,7 @@ const jobApplicationSchema=new mongoose.Schema({
         type:Date,
         default:Date.now
     },
+    
     currentStatus:{
        type:String,
        enum:{

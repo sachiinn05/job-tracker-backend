@@ -30,4 +30,17 @@ const validateEditProfileData=(req)=>{
   const isEditiAllowed=Object.keys(req.body).every((fields)=>allowedEditFields.includes(fields));
   return isEditiAllowed;
 }
-module.exports={validateSignUpData,validateEditProfileData};
+
+const validateEditiJobData=(req)=>{
+    const allowedEditFields=[
+    "companyName",
+    "role",
+    "platform",
+    "jobLink",
+    "notes",
+    "followUpDate",
+    ];
+    const isEditiAllowed=Object.keys(req.body).every((fields)=>allowedEditFields.includes(fields));
+    return isEditiAllowed;
+}
+module.exports={validateSignUpData,validateEditProfileData,validateEditiJobData};
