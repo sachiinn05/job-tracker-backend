@@ -31,15 +31,41 @@ jobRouter.post("/job",userAuth,async(req,res)=>{
      res.status(400).send("Error :"+err.message);
    }
 });
-
 jobRouter.get("/job",userAuth, async(req,res)=>{
     try{
-        const jobs=await JobApplication.find({userId:req.user.id});
-        res.status(200).json(jobs);
-    }catch(err)
+        const userId=req.user.id;
+        const filter={userId:userId};
+        if(req.query.status)
+        {
+            filter.currentStatus=req.query.status;
+        }
+        const job=await JobApplication.find(filter);
+        res.status(200).json(job);
+    }catch(error)
     {
-        res.status(400).send("Error :"+err.message);
+        res.status(500).json({
+            error: "Failed to fetch jobs",
+             message: error.message
+        })
     }
+})
+
+jobRouter.get("/job/analytics", userAuth, async (req, res) => {
+  try {
+    const jobs = await JobApplication.find({ userId: req.user.id });
+
+    const analytics = {
+      total: jobs.length,
+      applied: jobs.filter(j => j.currentStatus === "Applied").length,
+      interview: jobs.filter(j => j.currentStatus === "Interview").length,
+      offer: jobs.filter(j => j.currentStatus === "Offer").length,
+      rejected: jobs.filter(j => j.currentStatus === "Rejected").length,
+    };
+
+    res.status(200).json(analytics);
+  } catch (err) {
+    res.status(500).send("Error: " + err.message);
+  }
 });
 
 jobRouter.get("/job/:id",userAuth,async(req,res)=>{
@@ -129,5 +155,8 @@ jobRouter.delete("/job/:id",userAuth,async(req,res)=>{
         res.status(500).send("Error:"+err.message);
     }
 })
+
+
+
 
 module.exports=jobRouter;
