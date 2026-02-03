@@ -112,4 +112,22 @@ jobRouter.patch("/job/:id/status",userAuth,async(req,res)=>{
     }
 })
 
+jobRouter.delete("/job/:id",userAuth,async(req,res)=>{
+    try{
+        const job_id=req.params.id;
+        const job=await JobApplication.findById(job_id)
+        
+        if(!job || job.userId.toString()!==req.user.id)
+        {
+           return res.status(400).send("Job not found");
+        }
+        await job.deleteOne();
+        res.status(200).json({ message: "Job deleted successfully" });
+
+    }catch(err)
+    {
+        res.status(500).send("Error:"+err.message);
+    }
+})
+
 module.exports=jobRouter;
