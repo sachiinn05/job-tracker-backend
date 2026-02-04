@@ -52,4 +52,19 @@ preparationRouter.patch("/preparation/:id",userAuth,async(req,res)=>{
         res.status(400).send("Error:"+err.message);
     }
 });
+prepRouter.delete("/preparation/:id", userAuth, async (req, res) => {
+  try {
+    const preparation = await Preparation.findById(req.params.id);
+
+    if (!preparation || preparation.userId.toString() !== req.user.id) {
+      return res.status(404).json({ error: "Topic not found" });
+    }
+
+    await preparation.deleteOne();
+    res.status(200).json({ message: "Topic deleted successfully" });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 module.exports=preparationRouter;
