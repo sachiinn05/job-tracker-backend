@@ -52,7 +52,7 @@ preparationRouter.patch("/preparation/:id",userAuth,async(req,res)=>{
         res.status(400).send("Error:"+err.message);
     }
 });
-prepRouter.delete("/preparation/:id", userAuth, async (req, res) => {
+preparationRouter.delete("/preparation/:id", userAuth, async (req, res) => {
   try {
     const preparation = await Preparation.findById(req.params.id);
 
