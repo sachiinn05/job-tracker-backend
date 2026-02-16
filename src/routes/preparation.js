@@ -3,6 +3,7 @@ const preparationRouter=express.Router();
 const Preparation=require("../models/preparation");
 const { userAuth } = require("../middleware/auth");
 const {validateEditPreparationData}=require("../utils/validation");
+
 preparationRouter.post("/preparation",userAuth,async(req,res)=>{
     try{
         const preparation=new Preparation({
@@ -18,7 +19,8 @@ preparationRouter.post("/preparation",userAuth,async(req,res)=>{
     {
         res.status(400).send("Error :"+err.message);
     }
-})
+});
+
 preparationRouter.get("/preparation",userAuth,async(req,res)=>{
     try{
         const userId=req.user.id;
@@ -29,6 +31,8 @@ preparationRouter.get("/preparation",userAuth,async(req,res)=>{
        res.status(400).send("Error:"+err.message);
     }
 });
+
+
 preparationRouter.patch("/preparation/:id",userAuth,async(req,res)=>{
     try{
          const isValid = validateEditPreparationData(req);
@@ -52,6 +56,8 @@ preparationRouter.patch("/preparation/:id",userAuth,async(req,res)=>{
         res.status(400).send("Error:"+err.message);
     }
 });
+
+
 preparationRouter.delete("/preparation/:id", userAuth, async (req, res) => {
   try {
     const preparation = await Preparation.findById(req.params.id);
@@ -67,4 +73,5 @@ preparationRouter.delete("/preparation/:id", userAuth, async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
 module.exports=preparationRouter;
